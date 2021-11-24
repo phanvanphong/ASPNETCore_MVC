@@ -1,0 +1,98 @@
+﻿@page
+@model DemoDotNet5.Areas.Identity.Pages.Role.EditModel
+@{
+}
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Roles</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Edit</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="">Name: </label>
+                                <input asp-for="Input.Name" type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter role">
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                    <br /><br />
+
+
+                    <!-- Hiển thị danh sách Claim của Role -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">List Claims for Role </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>Claim Type </th>
+                                        <th>Claim Value</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var claim in Model.Claims)
+                                    {
+                                        <tr>
+                                            <td>@claim.ClaimType</td>
+                                            <td>@claim.ClaimValue</td>
+                                            <td>
+                                                <a asp-page="../Claim/Edit" asp-route-claimId="@claim.Id" class="btn btn-success">Edit</a>
+                                                <a onclick="return confirm('Are you sure ?')" asp-page="../Claim/Delete" asp-route-claimId="@claim.Id" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="card-footer">
+                                <a asp-page="../Claim/Create" asp-route-roleId="@Model.role.Id" class="btn btn-primary">+ Add Claim</a>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

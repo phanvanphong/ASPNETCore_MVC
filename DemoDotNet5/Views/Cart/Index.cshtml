@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    var carts = ViewBag.carts;
+}
+
+
+<div class="col-lg-12 col-md-12">
+    <!--shopping cart area start -->
+    <div class="shopping_cart_area">
+        <form action="#">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table_desc">
+                        <div class="cart_page table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Delete</th>
+                                        <th class="product_thumb">Image</th>
+                                        <th class="product_name">Product</th>
+                                        <th class="product-price">Price</th>
+                                        <th>Quantity</th>
+                                        <th class="product_total">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var total = 0;
+                                    }
+                                    @if (carts != null)
+                                    {
+
+                                        @*@foreach (var cart in carts)
+                                            {
+                                                string txt_class = "quantity_" + cart.Product.Id;
+                                                var totalItem = cart.Product.Price * cart.Quantity;
+                                                total += totalItem;
+                                                <tr>
+                                                    <td class="product_remove"><a onclick="return confirm('Delete product ?')" asp-controller="Cart" asp-action="DeleteCart" asp-route-Id="@cart.Product.Id"><i class="fa fa-trash-o"></i></a></td>
+                                                    <td class="product_thumb"><a href="#"><img src="~/images/@cart.Product.ImageName" alt=""></a></td>
+                                                    <td class="product_name"><a href="#">@cart.Product.Name</a></td>
+                                                    <td class="product-price">@String.Format("{0:n0}", cart.Product.Price)</td>
+                                                    <td class="product_quantity"><input type="number" class="@txt_class" value="@cart.Quantity" /></td>
+                                                    <td><a data-id="@cart.Product.Id" class="updateCart checkout_btn btn btn-dark text-white">Update</a></td>
+                                                    <td class="product_total">@String.Format("{0:n0}", totalItem) <sup>VNĐ</sup></td>
+                                                </tr>
+                                            }*@
+
+
+                                        foreach (var cart in carts)
+                                        {
+                                            // Lấy số lượng của sản phẩm
+                                            string quantity = "quantity_" + cart.Product.Id;
+
+                                            // Tổng tiền tương ứng
+                                            string cart_total = "cart_total_" + cart.Product.Id;
+
+                                            var totalItem = cart.Product.Price * cart.Quantity;
+                                            total += totalItem;
+                                            <tr class="cart_@cart.Product.Id">
+                                                <td class="product_remove"><a class="deleteCart" data-id="@cart.Product.Id"><i class="fa fa-trash-o"></i></a></td>
+                                                <td class="product_thumb"><a href="#"><img src="~/images/@cart.Product.ImageName" style="width:60%" alt=""></a></td>
+                                                <td class="product_name"><a href="#">@cart.Product.Name</a></td>
+                                                <td class="product-price">@String.Format("{0:n0}", cart.Product.Price)</td>
+                                                <td class="product_quantity"><input type="number" data-id="@cart.Product.Id" class="updateCart @quantity" value="@cart.Quantity" /></td>
+                                                <td class="product_total"><span class="@cart_total">@String.Format("{0:n0}", totalItem)</span> <sup>VNĐ</sup></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr colspan="6">
+                                            Your cart is currently empty
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--coupon code area start-->
+            <div class="coupon_area">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="coupon_code">
+                            <h3>Coupon</h3>
+                            <div class="coupon_inner">
+                                <p>Enter your coupon code if you have one.</p>
+                                <input placeholder="Coupon code" type="text">
+                                <button type="submit">Apply coupon</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="coupon_code">
+                            <h3>Cart Totals</h3>
+                            <div class="coupon_inner">
+                                <div class="cart_subtotal">
+                                    <p>Subtotal</p>
+                                    <p class="cart_amount"><span class="sub-total">@String.Format("{0:n0}", total)</span><sup>VNĐ</sup></p>
+                                </div>
+                                <div class="cart_subtotal ">
+                                    <p>Shipping</p>
+                                    <p class="cart_amount">Freeship</p>
+                                </div>
+                                <a href="#">Calculate shipping</a>
+
+                                <div class="cart_subtotal">
+                                    <p>Total</p>
+                                    <p class="cart_amount"><span class="sub-total">@String.Format("{0:n0}", total)</span><sup>VNĐ</sup></p>
+                                </div>
+                                <div class="checkout_btn">
+                                    <!-- Check xem có sản phẩm nào trong giỏ hàng chưa-->
+                                    @if (carts == null)
+                                    {
+                                        <a asp-controller="Home" asp-action="Index">Back to Shopping Cart</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Checkout" asp-action="Index">Proceed to Checkout</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--coupon code area end-->
+        </form>
+    </div>
+    <!--shopping cart area end -->
+</div>
+
+
+@section Scripts {
+    <!-- Viết ajax gọi update -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $(".updateCart").blur(function (event) {
+                event.preventDefault();
+                var productId = $(this).data("id");
+                console.log(productId);
+                var quantity = $(".quantity_" + $(this).attr("data-id")).val();
+                console.log(quantity);
+                $.ajax({
+                    url: "Cart/UpdateCart",
+                    data: {
+                        productId: productId,
+                        quantity: quantity
+                    },
+                    success: function (data) {
+                        $("#cart-count").html(data.totalItems),
+                            $(".cart_total_" + productId).html(data.total);
+                        $(".sub-total").html(data.subTotal);
+                        // $(".subtotal").html(data.total);
+                    }
+                });
+            });
+        });
+
+
+        /* Viết ajax gọi delete */
+            $(document).ready(function () {
+                $(".deleteCart").click(function (event) {
+                    event.preventDefault();
+                    var productId = $(this).data("id");
+                    console.log(productId);
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "Cart/DeleteCart",
+                                data: {
+                                    id: productId
+                                },
+                                success: function (data) {
+                                    $("#cart-count").html(data.totalItems),
+                                        $(".sub-total").html(data.subTotal);
+                                    $(".cart_" + productId).remove();
+                                }
+                            });
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                        }
+                    }) 
+                });
+            });
+    </script>
+}
+

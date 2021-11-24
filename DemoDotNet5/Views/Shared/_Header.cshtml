@@ -1,0 +1,136 @@
+﻿@using DemoDotNet5.ViewModel;
+@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+
+
+@{
+    var cart = Context.Session.GetString("cart");
+    int totalItems = 0;
+    if (cart != null)
+    {
+        List<CartItemViewModel> dataCart = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cart);
+        totalItems = dataCart.Sum(c => c.Quantity);
+    }
+    var username = Context.Session.GetString("username");
+}
+
+
+
+<!-- Add your site or application content here -->
+<!--pos page start-->
+<div class="pos_page">
+    <div class="container">
+        <!--pos page inner-->
+        <div class="pos_page_inner">
+            <!--header area -->
+            <div class="header_area">
+                <!--header top-->
+                <div class="header_top">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="switcher">
+                                <ul>
+                                    <li class="languages">
+                                        <a href="#"><img src="~/site/assets\img\logo\fontlogo.jpg" alt=""> English <i class="fa fa-angle-down"></i></a>
+                                        <ul class="dropdown_languages">
+                                            <li><a href="#"><img src="~/site/assets\img\logo\fontlogo.jpg" alt=""> English</a></li>
+                                            <li><a href="#"><img src="~/site/assets\img\logo\fontlogo2.jpg" alt=""> French </a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="currency">
+                                        <a href="#"> Currency : $ <i class="fa fa-angle-down"></i></a>
+                                        <ul class="dropdown_currency">
+                                            <li><a href="#"> Dollar (USD)</a></li>
+                                            <li><a href="#"> Euro (EUR)  </a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="header_links">
+                                <ul>
+                                    <li><a href="#" title="Contact">Contact</a></li>
+                                    <li><a href="#" title="wishlist">My wishlist</a></li>
+                                    <li><a href="#" title="My account">My account</a></li>
+                                    <li><a asp-controller="Cart" asp-action="Index" title="My cart">My cart</a></li>
+                                    @if (username == null)
+                                    {
+                                        <li><a asp-controller="Account" asp-action="LoginOrRegister" title="Login">Login</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a onclick="return confirm('Want to logout?')" asp-controller="Acccount" asp-action="LogoutCustomer" title="Logout">Hello @username</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--header top end-->
+                <!--header middel-->
+                <div class="header_middel">
+                    <div class="row align-items-center">
+                        <!--logo start-->
+                        <div class="col-lg-3 col-md-3">
+                            <div class="logo">
+                                <a asp-controller="Home" asp-action="Index"><img src="~/site/assets\img\logo\logo.jpg.png" alt=""></a>
+                            </div>
+                        </div>
+                        <!--logo end-->
+                        <div class="col-lg-9 col-md-9">
+                            <div class="header_right_info">
+                                <div class="search_bar">
+                                    <form action="#">
+                                        <input placeholder="Search..." type="text">
+                                        <button type="submit"><i class="fa fa-search"></i></button>
+                                    </form>
+                                </div>
+                                <div class="shopping_cart">
+                                    <a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i>Items:<span id="cart-count">@totalItems</span> <i class="fa fa-angle-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--header middel end-->
+                <div class="header_bottom">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="main_menu_inner">
+                                <div class="main_menu d-none d-lg-block">
+                                    <nav>
+                                        <ul>
+                                            <li>
+                                                <a asp-controller="Home" asp-action="Index">Home</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">About Us</a>
+                                            </li>
+                                            <li>
+                                                <a asp-controller="Home" asp-action="ShopProducts">Shop</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Blog</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">contact us</a>
+                                            </li>
+
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--header end -->
+
+
+
+
+
+
